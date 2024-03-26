@@ -1,0 +1,94 @@
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@latest"></script>
+  <style>
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class='chart-container'>
+    <div id='chart1-vis'></div>
+  </div>
+
+  <script>
+    const chart1 =
+    {
+      "width": 1000,
+      "height": 500,
+      "background": "#052537",
+      "$Schema": "https://vega.github.io/schema/vega/v5.json",
+      "layer": [
+        {
+          "data": {
+            "url": "dunkins.csv"
+          },
+          "transform": [
+            { "calculate": "toNumber(datum.open)", "as": "open" },
+            { "calculate": "toNumber(datum.close)", "as": "close" }
+          ],
+          "projection": { "type": "albersUsa" },
+
+          "mark": { "type": "circle", "tooltip": true },
+          "encoding": {
+            "latitude": { "field": "loc_lat", "type": "quantitative" },
+            "longitude": { "field": "loc_long", "type": "quantitative" },
+            "size": { "value": 20 },
+            "color": {
+              // "condition": { "param": "open_dunks", "value": "orange" },
+              "value": "orange"
+            },
+            
+            "time": {
+              "field": "open",
+              "scale": {
+                "type": "linear",
+                "domain": [1632456000, 1632540600],
+                "range": [0, 10000]
+              }
+            }
+          }
+        },
+        {
+          "data": {
+            "url": "startbucks.csv"
+          },
+          "projection": { "type": "albersUsa" },
+
+          "mark": { "type": "circle", "tooltip": true },
+          "encoding": {
+            "latitude": { "field": "latitude", "type": "quantitative" },
+            "longitude": { "field": "longitude", "type": "quantitative" },
+            "size": { "value": 20 },
+            "color": { "value": "green" }
+          }
+        }
+      ],
+      // "params": [
+      //   {
+      //     "name": "open_dunks",
+      //     "select": {
+      //       "type": "point",
+      //       "on": "timer",
+      //       "predicate": {
+      //         "and": [
+      //           { "field": "open", "lte": { "expr": "anim_value" } },
+      //           { "field": "close", "gt": { "expr": "anim_value" } }
+      //         ]
+      //       }
+      //     }
+      //   }
+      // ],
+    }
+    vegaEmbed("#chart1-vis", chart1, { actions: false });
+  </script>
+</body>
+
+</html>
